@@ -17,6 +17,6 @@ TDD - Test Driven Development.
 I think in the cases 9, 10, 11 and 13 are a problem. 
 If I add the distance in x and y, there are enemies closer than the expected in the proposal test. 
 
-If I only take the y axis, happen the same. I'm returning the closer/further enemies but are not that the test is expecting. 
+If I only take the y axis, happen the same. I'm returning the closer/further enemies but are not that the test result is expecting. 
 
 Also happen something similar with the limit of 100, I don't know if base on one axis or the sum of both. 

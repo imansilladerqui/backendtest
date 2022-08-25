@@ -1,5 +1,7 @@
 const radar = (input) => {
   let response = []
+  let loop = []
+  let result = []
 
   if (
     input.protocols.includes('closest-enemies') ||
@@ -16,126 +18,102 @@ const radar = (input) => {
     input.protocols.push(element)
   }
 
-  input.protocols.forEach((protocol) => {
+  input.protocols.map((protocol, index) => {
+    if (index === 0) {
+      loop = input.scan
+    } else {
+      loop = response
+    }
+
     switch (protocol) {
       case 'closest-enemies':
         let globaldistanceClose = 0
+        loop.map((scan, index) => {
+          if (index === 0) {
+            result = [scan.coordinates]
+            globaldistanceClose = scan.coordinates.x + scan.coordinates.y
+          }
 
-        if (input.protocols.length > 1) {
-          response.map((scan, index) => {
-            if (index === 0) {
-              response = [scan]
-              globaldistanceClose = scan.x + scan.y
-            }
-
-            if (scan.x + scan.y <= globaldistanceClose) {
-              response = [scan]
-              globaldistanceClose = scan.x + scan.y
-            }
-          })
-        } else {
-          input.scan.map((scan, index) => {
-            if (index === 0) {
-              response = [scan.coordinates]
-              globaldistanceClose = scan.coordinates.x + scan.coordinates.y
-            }
-
-            if (
-              scan.coordinates.x + scan.coordinates.y <=
-              globaldistanceClose
-            ) {
-              response = [scan.coordinates]
-              globaldistanceClose = scan.coordinates.x + scan.coordinates.y
-            }
-          })
-        }
-
-        break
+          if (scan.coordinates.x + scan.coordinates.y <= globaldistanceClose) {
+            result = [scan.coordinates]
+            globaldistanceClose = scan.coordinates.x + scan.coordinates.y
+          }
+        })
+        return (response = result)
       case 'furthest-enemies':
         let globaldistanceFar = 0
-        if (input.protocols.length > 1) {
-          response.map((scan, index) => {
-            if (index === 0) {
-              response = [scan]
-              globaldistanceFar = scan.x + scan.y
-            }
+        loop.map((scan, index) => {
+          if (index === 0) {
+            result = [scan.coordinates]
+            globaldistanceFar = scan.coordinates.x + scan.coordinates.y
+          }
 
-            if (scan.x + scan.y <= globaldistanceFar) {
-              response = [scan]
-              globaldistanceFar = scan.x + scan.y
-            }
-          })
-        } else {
-          input.scan.map((scan, index) => {
-            if (index === 0) {
-              response = [scan.coordinates]
-              globaldistanceFar = scan.coordinates.x + scan.coordinates.y
-            }
-
-            if (scan.coordinates.x + scan.coordinates.y > globaldistanceFar) {
-              response = [scan.coordinates]
-              globaldistanceFar = scan.coordinates.x + scan.coordinates.y
-            }
-          })
-        }
-
-        break
+          if (scan.coordinates.x + scan.coordinates.y > globaldistanceFar) {
+            result = [scan.coordinates]
+            globaldistanceFar = scan.coordinates.x + scan.coordinates.y
+          }
+        })
+        return (response = result)
       case 'assist-allies':
+        result = []
         input.scan.map((scan) => {
           if (scan.allies) {
             if (
               input.protocols.includes('closest-enemies') ||
               input.protocols.includes('furthest-enemies')
             ) {
-              response.push(scan.coordinates)
+              result.push(scan)
             } else {
-              response = [scan.coordinates]
+              result = [scan.coordinates]
             }
           }
         })
-        break
+        return (response = result)
       case 'avoid-crossfire':
-        input.scan.map((scan) => {
+        result = []
+        loop.map((scan) => {
           if (!scan.allies) {
             if (
               input.protocols.includes('closest-enemies') ||
               input.protocols.includes('furthest-enemies')
             ) {
-              response.push(scan.coordinates)
+              result.push(scan)
             } else {
-              response = [scan.coordinates]
+              result = [scan.coordinates]
             }
           }
         })
-        break
+        return (response = result)
       case 'prioritize-mech':
+        result = []
         input.scan.map((scan) => {
           if (scan.enemies.type === 'mech') {
             if (
               input.protocols.includes('closest-enemies') ||
               input.protocols.includes('furthest-enemies')
             ) {
-              response.push(scan.coordinates)
+              result.push(scan)
             } else {
-              response = [scan.coordinates]
+              result = [scan.coordinates]
             }
           }
         })
-        break
+        return (response = result)
       case 'avoid-mech':
+        result = []
         input.scan.map((scan) => {
           if (scan.enemies.type !== 'mech') {
             if (
               input.protocols.includes('closest-enemies') ||
               input.protocols.includes('furthest-enemies')
             ) {
-              response.push(scan.coordinates)
+              result.push(scan)
             } else {
-              response = [scan.coordinates]
+              result = [scan.coordinates]
             }
           }
         })
-        break
+        return (response = result)
     }
   })
   return response
