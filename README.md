@@ -14,7 +14,7 @@ TDD - Test Driven Development.
 
 # Technical Problems
 
-I think in the cases 9, 10, 11 and 13 are a problem. 
+I think in the cases 9, 10 and 11 are a problem. 
 If I add the distance in x and y, there are enemies closer than the expected in the proposal test. 
 
 If I only take the y axis, happen the same. I'm returning the closer/further enemies but are not that the test result is expecting. 
